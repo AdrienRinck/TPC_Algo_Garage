@@ -1,0 +1,191 @@
+Algorithme Garages 
+But 
+Entree 
+Sortie 
+Type Tabl:Tableau[1..15] de Voitures
+FINTYPE
+Type Tabl2:Tableau[1..2] de Garage
+FINTYPE
+Type Garage=Enregistrement
+	Caisse:Tableau [1..15] de Voitures
+	nom:Chaine 
+	adresse:AdressType
+FINTYPE 
+Type AdressType=Enregistrement
+	Num:entier
+	Voie:Chaine 
+	CP:Chaine
+	Ville:Chaine
+	Pays:Chaine 
+	NumTel:Chaine 
+	Email:Chaine 
+FINTYPE 
+Type Voitures=Enregistrement
+	Marque:MarqueType
+	Modele:Chaine 
+	Energie:EnergieType
+	PuiFisc:Entier
+	PuiDyn:Entier 
+	Couleur:Chaine 
+	Option:Chaine 
+	Annee:Entier 
+	PrixNeuf:Entier 
+	Cote:Entier 
+	DateMiseCirc:Entier 
+	Age:Entier 
+	Plaque:Entier
+FINTYPE
+Type MarqueType=(Renault,Peugeot,Audi,BMW,Ferrari)
+FINTYPE
+Type EnergieType=(Essence,Diesel,GPL,Electrique,Hybride)
+FINTYPE 
+
+Fonction FonctionEmail (var T2:Tabl):Entier
+var 
+	i:entier 
+Debut 
+	Pour i <- 1 A longeur(T2[j].Garage.adresse.Email) FAIRE 
+		Si T2[j].Garage.adresse.Email[i] = '@' Alors 
+			FonctionEmail<-3
+		FINSI 
+	FINPOUR 
+FINFONCTION
+
+Procedure GarageProc (var T2:Tabl)	
+var 
+	i:entier 
+Debut
+	Pour j<-1 A 2 Faire 
+		ECRIRE('Entrez le nom du garage numéro '&1)
+		LIRE(T2[j].Garage.nom)
+		ECRIRE('Entrez le numero de la voie et le nom de celle-ci')
+		LIRE(T2[j].Garage.adresse.Num & T2[j].Garage.adresse.Voie)
+		ECRIRE('Entrez le code postal puis la ville du garage')
+		LIRE(T2[j].Garage.adresse.CP & T2[j].Garage.adresse.Ville)
+		ECRIRE('Entrez le de telephone')
+		LIRE(T2[j].Garage.adresse.NumTel)
+		Repeter 
+			ECRIRE('Entrez l'email')
+			Lire(T2[j].Garage.adresse.Email)
+		Jusqu'a FonctionEmail=3
+		FINREPETER
+	FINPOUR
+FINPROCEDURE
+		
+Fonction CoteArgusEtAge (var Age:Entier,var T2:Tabl2,var T1:Tabl):entier
+Debut 
+	Age<-(2017)-(T2[j].Garage.T1[i].Voitures.Annee)
+	Cas Age parmis : 
+		1:(T2[j].Garage.T1[i].Voitures.Cote)<-(T2[j].Garage.T1[i].Voitures.PrixNeuf)*0.85
+		2:(T2[j].Garage.T1[i].Voitures.Cote)<-(T2[j].Garage.T1[i].Voitures.PrixNeuf)*0.75
+		3:(T2[j].Garage.T1[i].Voitures.Cote)<-(T2[j].Garage.T1[i].Voitures.PrixNeuf)*0.65
+	FINCASPARMI 
+	Si Age>3 Alors 
+		(T2[j].Garage.T1[i].Voitures.Cote)<-0
+	FINSI 
+	T2[j].Garage.T1[i].Voitures.Age<-Age 
+FINFONCTION 
+
+Procedure VoitureProc (var T1:Tabl, var T2:Tabl2)
+var 
+	i,j:entier 
+Debut
+	REPETER 
+		ECRIRE('Entrez le garage dans lequel vous voulez entrez une voiture (1 ou 2) ou 0 pour arreter')
+		LIRE(Choix)
+		Pour j<-Choix A Choix Faire 
+			ECRIRE('Entrez le numéro qui va avec la marque du véhicule, Renault:0, Peugot:1, Audi:2, BMW:3, Ferrari:4')
+			LIRE(T2[j].Garage.T1[i].Voitures.Marque)
+			ECRIRE('Entrez le Modele du véhicule')
+			LIRE(T2[j].Garage.T1[i].Voitures.Modele)
+			ECRIRE('Quel Energie utilise elle ? Essence:0, Diesel:1, GPL:2, Electrique:3, Hybride:4')
+			LIRE(T2[j].Garage.T1[i].Voitures.Energie)
+			REPETER
+				ECRIRE('Indiquez la puissance fiscal')
+				LIRE(T2[j].Garage.T1[i].Voitures.PuiFisc)
+			Jusqu'a (T2[j].Garage.T1[i].Voitures.PuiFisc)>=20 ET (T2[j].Garage.T1[i].Voitures.PuiFisc)<=3
+			FINREPETER
+			ECRIRE('Indiquez la puissance dynamique')
+			LIRE(T2[j].Garage.T1[i].Voitures.PuiDyn)
+			ECRIRE('Entrez la couleur du véhicule')
+			LIRE(T2[j].Garage.T1[i].Voitures.Couleur)
+			ECRIRE('Entrez les options')
+			LIRE(T2[j].Garage.T1[i].Voitures.Option)
+			REPETER 
+				ECRIRE('Entrez l'année du modèle')
+				Lire(T2[j].Garage.T1[i].Voitures.Annee)
+			Jusqu'a (T2[j].Garage.T1[i].Voitures.Annee>=1990) ET (T2[j].Garage.T1[i].Voitures.Annee<=2017)
+			FINREPETER
+			ECRIRE('Entrez la valeur neuf du modèle')
+			LIRE(T2[j].Garage.T1[i].Voitures.PrixNeuf)
+			CoteArgusEtAge(Age,T2,T1) 
+			REPETER 
+				ECRIRE('Entrez l'année de mise en circulation du modèle')
+				Lire(T2[j].Garage.T1[i].Voitures.DateMiseCirc)
+			Jusqu'a (T2[j].Garage.T1[i].Voitures.DateMiseCirc>=1990) ET (T2[j].Garage.T1[i].Voitures.DateMiseCirc<=2017)
+			FINREPETER
+			ECRIRE('Entrez la plaque d'immatriculation')
+			LIRE(T2[j].Garage.T1[i].Voitures.Plaque)
+			i<-i+1
+		FINPOUR 
+	JUSQU'A Choix=0
+	FINREPETER 
+FINPROCEDURE
+
+Procedure Affichage(T2:Tabl2,T1:Tabl)
+Var	
+	Nb:Entier 
+Debut	
+	ECRIRE('Entrez : ')
+	ECRIRE(' 1 : Affichage des deux garages')
+	ECRIRE(' 2 : Affichage du garage qui a le plus de véhicule')
+	ECRIRE(' 3 : Affichage du véhicule le plus ancien')
+	ECRIRE(' 4 : Affichage de la moyenne de la valeurs des véhicules par garage')
+	ECRIRE(' 5 : Affichage du véhicule le plus cher neuf')
+	Lire(Nb)
+	Cas Nb Parmis 
+		1: AffichageGarages(T2,T1)
+		2: 
+		3: AffichageAncien(T2,T1)
+	FINCASPARMI
+FINPROCEDURE	
+
+Procedure AffichageAncien (var T2:Tabl2,var T1:Tabl)
+var 
+	i,j:entier 
+Debut 
+	Pour j<-1 A 2 
+		Pour i<-1 A 15 Faire 
+			Si Aide>T2[j].Garage.T1[i].Voitures.Annee Alors 
+				Aide<-T2[j].Garage.T1[i].Voitures.Annee
+			FINSI 
+		FINPOUR 
+	FINPOUR 
+FINPROCEDURE
+Procedure AffichageGarages(var T2:Tabl2,var T1:Tabl)
+var 
+	i,j:entier 
+Debut 
+	Pour j<-1 A 2 Faire 
+		Pour i<-1 A 15 Faire 
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Marque)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Modele)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Energie)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.PuiFisc)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.PuiDyn)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Couleur)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Option)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Annee)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.PrixNeuf)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Cote)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Age)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.DateMiseCirc)
+			ECRIRE(T2[j].Garage.T1[i].Voitures.Plaque)
+		FINPOUR
+	FINPOUR 
+FINPROCEDURE 		
+
+DEBUT 	
+	VoitureProc(T1,T2)
+	Affichage(T2,T1)
+FIN 
